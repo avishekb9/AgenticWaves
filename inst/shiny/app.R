@@ -244,11 +244,13 @@ ui <- dashboardPage(
                           ),
                           selected = "yahoo"),
                 
-                shinyWidgets::disabled(textInput("api_symbols", "Asset Symbols (comma-separated):",
-                                 value = "AAPL,GOOGL,MSFT,TSLA")),
+                textInput("api_symbols", "Asset Symbols (comma-separated):",
+                         value = "AAPL,GOOGL,MSFT,TSLA", 
+                         placeholder = "Coming soon..."),
                 
-                shinyWidgets::disabled(actionButton("fetch_api_data", "📡 Fetch Data", 
-                                    class = "btn-warning"))
+                actionButton("fetch_api_data", "📡 Fetch Data (Coming Soon)", 
+                           class = "btn-warning disabled", 
+                           disabled = "disabled")
               )
             )
           )
