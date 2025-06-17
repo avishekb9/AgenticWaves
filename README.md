@@ -6,7 +6,7 @@
 
 > **Agentic AI-Powered Wavelet Financial Network Analysis**
 
-A revolutionary framework combining Agent-Based Modeling (ABM) with Wavelet Quantile Transfer Entropy (WaveQTE) analysis for comprehensive financial network analysis. Features autonomous AI agents, dynamic spillover detection, multi-asset analysis, and publication-quality visualizations.
+A framework combining Agent-Based Modeling (ABM) with Wavelet Quantile Transfer Entropy (WaveQTE) analysis for comprehensive financial network analysis. Features autonomous AI agents, dynamic spillover detection, multi-asset analysis, and quality visualizations.
 
 ## 🚀 Features
 
