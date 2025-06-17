@@ -1,0 +1,301 @@
+---
+title: "Getting Started with AgenticWaves"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with AgenticWaves}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Getting Started with AgenticWaves
+
+Welcome to AgenticWaves, a revolutionary R package that combines autonomous AI agents with advanced financial network analysis. This guide will help you get started with the core features and functionality.
+
+## Installation
+
+### From GitHub
+
+```{r}
+# Install from GitHub (recommended)
+devtools::install_github("avishekb9/AgenticWaves")
+
+# Or download and install locally
+# git clone https://github.com/avishekb9/AgenticWaves.git
+# cd AgenticWaves
+# source("install.R")
+```
+
+### Load the Package
+
+```{r}
+library(AgenticWaves)
+```
+
+When you load AgenticWaves, you'll see a welcome message with quick start information.
+
+## Quick Start
+
+### Interactive Launcher
+
+The easiest way to explore AgenticWaves is through the interactive launcher:
+
+```{r}
+launch_agentic_waves()
+```
+
+This opens an interactive menu with 11 different analysis options:
+
+1. **📱 Launch Interactive Dashboard** - Full Shiny application
+2. **🤖 Quick Autonomous Analysis** - AI-powered analysis with sample data
+3. **🎬 Run Complete Demo** - Full demonstration with all features
+4. **🕸️ Network Analysis Only** - Focus on spillover networks
+5. **👥 Agent Simulation Only** - Agent-based market modeling
+6. **📁 Load Custom Dataset** - Upload your own data
+7. **🎨 Generate Visualization Gallery** - Publication-quality plots
+8. **📄 Create Sample Report** - Comprehensive analysis report
+9. **🔍 System Diagnostics** - Check system status
+10. **📚 View Documentation** - Package help
+11. **🧪 Test All Functions** - Comprehensive testing
+
+### Shiny Dashboard
+
+For interactive analysis, launch the comprehensive Shiny dashboard:
+
+```{r}
+run_agentic_waves_app()
+```
+
+The dashboard includes:
+- Data upload and processing
+- Autonomous AI analysis configuration
+- Interactive network visualization
+- Agent simulation setup
+- Real-time spillover analysis
+- Visualization gallery
+- Report generation
+
+## Basic Analysis Workflow
+
+### 1. Load Sample Data
+
+AgenticWaves includes built-in sample datasets for immediate testing:
+
+```{r}
+# Load global stock market data
+data <- get_sample_data("global_markets", n_assets = 10, n_periods = 500)
+
+# Other options:
+# data <- get_sample_data("crypto")          # Cryptocurrency data
+# data <- get_sample_data("commodities")     # Commodity market data
+```
+
+### 2. Create an Autonomous AI Agent
+
+Create an AI agent that can autonomously analyze your data:
+
+```{r}
+# Create an explorer-type agent
+agent <- create_autonomous_agent("explorer")
+
+# Other agent types:
+# agent <- create_autonomous_agent("optimizer")   # Optimization-focused
+# agent <- create_autonomous_agent("predictor")   # Prediction-focused
+```
+
+### 3. Run Autonomous Analysis
+
+Let the AI agent analyze your data autonomously:
+
+```{r}
+results <- agent$analyze_autonomously(
+  data = data,
+  objective = "exploration",
+  autonomy_level = 3
+)
+
+# View insights
+print(results$insights)
+
+# Check performance
+print(results$performance_score)
+```
+
+### 4. Agent-Based Market Simulation
+
+Create a population of trading agents and simulate market dynamics:
+
+```{r}
+# Create diverse agent population
+agents <- create_enhanced_agent_population(
+  n_agents = 500,
+  behavioral_heterogeneity = 0.7,
+  wealth_distribution = "pareto"
+)
+
+# Run market simulation
+sim_results <- simulate_enhanced_market_dynamics(
+  agents = agents,
+  asset_data = data,
+  n_periods = 1000,
+  network_effects = TRUE
+)
+
+# View simulation summary
+print(paste("Final wealth Gini:", round(sim_results$final_wealth_gini, 3)))
+print(paste("Average agent return:", round(mean(sim_results$agent_returns) * 100, 2), "%"))
+```
+
+### 5. Spillover Network Analysis
+
+Analyze dynamic spillover effects and detect contagion episodes:
+
+```{r}
+# Calculate dynamic spillovers
+spillover_results <- calculate_dynamic_spillover_networks(
+  simulation_results = sim_results,
+  window_size = 100,
+  significance_level = 0.05
+)
+
+# View spillover statistics
+print(paste("Average spillover:", round(mean(spillover_results$total_spillover), 2), "%"))
+print(paste("Peak spillover:", round(max(spillover_results$total_spillover), 2), "%"))
+print(paste("Contagion episodes:", nrow(spillover_results$contagion_episodes)))
+```
+
+### 6. Advanced Contagion Detection
+
+Use multiple methodologies for robust contagion detection:
+
+```{r}
+# Detect contagion episodes using multiple methods
+contagion_results <- detect_contagion_episodes(
+  spillover_results = spillover_results,
+  detection_methods = c("threshold", "regime", "correlation", "volatility")
+)
+
+# View episode characteristics
+print(contagion_results$episode_characteristics)
+```
+
+### 7. Publication-Quality Visualizations
+
+Generate professional visualizations for papers and presentations:
+
+```{r}
+# Create comprehensive dashboard
+plots <- generate_publication_dashboard(
+  simulation_results = sim_results,
+  spillover_results = spillover_results,
+  output_dir = "publication_output",
+  save_plots = TRUE
+)
+
+# Individual network plot
+network_plot <- plot_enhanced_network(
+  spillover_results$network_results,
+  layout = "stress",
+  node_size_var = "degree",
+  color_scheme = "viridis"
+)
+```
+
+## Data Quality and Preprocessing
+
+### Validate Your Data
+
+Before analysis, check data quality:
+
+```{r}
+# Assess data quality
+quality_report <- validate_data_quality(data)
+
+print(paste("Quality score:", quality_report$quality_score, "/100"))
+print(paste("Quality level:", quality_report$quality_level))
+
+# View recommendations
+if(length(quality_report$recommendations) > 0) {
+  cat("Recommendations:\n")
+  for(rec in quality_report$recommendations) {
+    cat("•", rec, "\n")
+  }
+}
+```
+
+### Process Financial Data
+
+Clean and preprocess your data:
+
+```{r}
+# Process data with outlier removal
+processed_data <- process_financial_data(
+  data = data,
+  remove_outliers = TRUE,
+  standardize = FALSE
+)
+
+# Detect asset classes automatically
+asset_classes <- detect_asset_classes(processed_data)
+print(asset_classes)
+```
+
+## Custom Data Analysis
+
+### Load Your Own Data
+
+AgenticWaves can analyze your custom datasets:
+
+```{r}
+# Load CSV data
+custom_data <- read.csv("your_financial_data.csv")
+
+# Process for AgenticWaves
+processed_custom <- process_financial_data(custom_data)
+
+# Validate quality
+quality <- validate_data_quality(processed_custom)
+
+# Run analysis
+custom_agent <- create_autonomous_agent("optimizer")
+custom_results <- custom_agent$analyze_autonomously(processed_custom)
+```
+
+## Next Steps
+
+- Explore the **Interactive Dashboard** for hands-on analysis
+- Read the **Agent-Based Modeling** guide for detailed ABM information
+- Check the **Network Analysis** article for advanced spillover techniques
+- Review the **Visualization Guide** for publication-ready plots
+- Try the **Advanced Analysis** tutorial for complex workflows
+
+## Getting Help
+
+- **Package Documentation**: `?AgenticWaves`
+- **Function Help**: `?function_name` (e.g., `?create_autonomous_agent`)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/avishekb9/AgenticWaves/issues)
+- **Email Support**: bavisek@gmail.com
+
+## Example Gallery
+
+For a quick demonstration of capabilities, run:
+
+```{r}
+# Generate visualization gallery
+generate_visualization_gallery()
+
+# Create sample report
+create_sample_report()
+
+# Run complete demo
+run_complete_demo()
+```
+
+This will create comprehensive examples showing all major features of AgenticWaves.

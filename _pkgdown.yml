@@ -1,0 +1,161 @@
+url: https://avishekb9.github.io/AgenticWaves/
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+  bslib:
+    primary: "#0d6efd"
+    secondary: "#6c757d"
+    success: "#198754"
+    info: "#0dcaf0"
+    warning: "#ffc107"
+    danger: "#dc3545"
+    light: "#f8f9fa"
+    dark: "#212529"
+
+home:
+  title: "AgenticWaves"
+  description: "Agentic AI-Powered Wavelet Financial Network Analysis"
+  strip_header: true
+  sidebar:
+    structure: [links, license, community, citation, authors, dev]
+    components:
+      links:
+        title: Links
+        text: Links
+        contents:
+        - text: GitHub Repository
+          href: https://github.com/avishekb9/AgenticWaves
+        - text: Report Issues
+          href: https://github.com/avishekb9/AgenticWaves/issues
+        - text: Download Package
+          href: https://github.com/avishekb9/AgenticWaves/releases
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get Started
+      href: articles/AgenticWaves.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+      - text: Getting Started
+        href: articles/getting-started.html
+      - text: Agent-Based Modeling
+        href: articles/agent-based-modeling.html
+      - text: Network Analysis
+        href: articles/network-analysis.html
+      - text: Visualization Guide
+        href: articles/visualization-guide.html
+    tutorials:
+      text: Tutorials
+      menu:
+      - text: Visualization Guide
+        href: articles/visualization-guide.html
+    news:
+      text: Changelog
+      href: news/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/avishekb9/AgenticWaves
+      aria-label: GitHub
+
+reference:
+- title: "Package Documentation"
+  desc: "Core package information"
+  contents:
+  - AgenticWaves-package
+
+- title: "Getting Started"
+  desc: "Core functions to get started with AgenticWaves"
+  contents:
+  - launch_agentic_waves
+  - run_agentic_waves_app
+  - get_sample_data
+  - check_system_requirements
+
+- title: "Data Processing"
+  desc: "Functions for data preparation and validation"
+  contents:
+  - process_financial_data
+  - validate_data_quality
+  - detect_asset_classes
+  - save_analysis_results
+  - load_analysis_results
+
+- title: "Autonomous AI Agents"
+  desc: "Create and manage autonomous AI agents"
+  contents:
+  - create_autonomous_agent
+  - detect_available_functions
+
+- title: "Agent-Based Modeling"
+  desc: "Agent population and network creation"
+  contents:
+  - create_enhanced_agent_population
+  - create_dynamic_multilayer_network
+  - simulate_enhanced_market_dynamics
+
+- title: "Network Analysis"
+  desc: "Spillover detection and network analysis"
+  contents:
+  - calculate_dynamic_spillover_networks
+  - detect_contagion_episodes
+  - calculate_network_metrics
+
+- title: "Visualization"
+  desc: "Publication-quality plots and dashboards"
+  contents:
+  - plot_enhanced_network
+  - plot_agent_type_network
+  - generate_publication_dashboard
+
+- title: "Utilities"
+  desc: "Helper functions and utilities"
+  contents:
+  - calculate_gini_coefficient
+  - install_missing_packages
+  - get_welcome_banner
+
+- title: "Interactive Interface"
+  desc: "Menu and interface functions"
+  contents:
+  - run_interactive_menu
+  - show_interactive_menu
+  - execute_menu_choice
+  - create_shiny_app
+
+articles:
+- title: Getting Started
+  navbar: ~
+  contents:
+  - getting-started
+
+- title: Core Features
+  navbar: ~
+  contents:
+  - agent-based-modeling
+  - network-analysis
+  - visualization-guide
+
+- title: Advanced Usage
+  navbar: ~
+  contents:
+  - visualization-guide
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with
+  components:
+    developed_by: "Developed by [Avishek Bhandari](https://github.com/avishekb9)"
+    built_with: "Built with [pkgdown](https://pkgdown.r-lib.org/)"
+
+authors:
+  Avishek Bhandari:
+    href: https://github.com/avishekb9

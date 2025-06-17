@@ -1,0 +1,470 @@
+---
+title: "Visualization Guide"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualization Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Visualization Guide
+
+AgenticWaves provides a comprehensive suite of publication-quality visualization functions for financial network analysis, agent-based modeling, and spillover detection.
+
+## Overview
+
+The visualization framework includes:
+
+- **Network visualizations** using ggraph for publication quality
+- **Time series plots** with regime highlighting
+- **Heatmaps** for spillover matrices and correlations
+- **Dashboard-style layouts** for comprehensive analysis
+- **Interactive plots** with plotly integration
+- **Agent visualization** showing behavioral clustering
+
+## Network Visualizations
+
+### Enhanced Network Plots
+
+```{r}
+library(AgenticWaves)
+
+# Create sample network data
+data <- get_sample_data("global_markets", n_assets = 10, n_periods = 500)
+agents <- create_enhanced_agent_population(n_agents = 300)
+
+sim_results <- simulate_enhanced_market_dynamics(
+  agents = agents,
+  asset_data = data,
+  n_periods = 1000
+)
+
+spillover_results <- calculate_dynamic_spillover_networks(
+  simulation_results = sim_results,
+  window_size = 100
+)
+
+# Create enhanced network plot
+network_plot <- plot_enhanced_network(
+  spillover_matrix = spillover_results$average_spillover_matrix,
+  layout = "stress",
+  node_size_var = "degree",
+  color_scheme = "viridis",
+  title = "Financial Network - Average Spillovers"
+)
+
+print(network_plot)
+```
+
+### Layout Options
+
+Different network layouts reveal different structural aspects:
+
+```{r}
+# Stress layout - good for general visualization
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  layout = "stress"
+)
+
+# Fruchterman-Reingold - emphasizes clusters
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  layout = "fr"
+)
+
+# Kamada-Kawai - good for small networks
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  layout = "kk"
+)
+
+# Circular layout - symmetric presentation
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  layout = "circle"
+)
+```
+
+### Color Schemes
+
+```{r}
+# Viridis (default) - perceptually uniform
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  color_scheme = "viridis"
+)
+
+# Plasma - high contrast
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  color_scheme = "plasma"
+)
+
+# RdYlBu - diverging colors
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  color_scheme = "RdYlBu"
+)
+
+# Spectral - rainbow colors
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  color_scheme = "Spectral"
+)
+```
+
+## Agent-Based Visualizations
+
+### Agent Type Networks
+
+```{r}
+# Create agent network
+network <- create_dynamic_multilayer_network(
+  agents = agents,
+  network_types = c("trading", "information", "social"),
+  density = 0.1
+)
+
+# Visualize agent network by type
+agent_plot <- plot_agent_type_network(
+  agents = agents,
+  network_obj = network$networks$trading$graph,
+  layout = "stress"
+)
+
+print(agent_plot)
+```
+
+### Wealth Distribution
+
+```{r}
+# Plot agent wealth evolution
+library(ggplot2)
+
+wealth_data <- data.frame(
+  time = rep(1:nrow(sim_results$agent_wealth), ncol(sim_results$agent_wealth)),
+  agent_id = rep(1:ncol(sim_results$agent_wealth), each = nrow(sim_results$agent_wealth)),
+  wealth = as.vector(sim_results$agent_wealth),
+  agent_type = rep(sapply(agents, function(x) x$type), each = nrow(sim_results$agent_wealth))
+)
+
+# Wealth evolution by type
+ggplot(wealth_data[seq(1, nrow(wealth_data), 10), ], 
+       aes(x = time, y = wealth, color = agent_type)) +
+  geom_line(alpha = 0.3, size = 0.2) +
+  stat_smooth(method = "loess", se = FALSE, size = 1) +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(title = "Agent Wealth Evolution by Type",
+       x = "Time Period", y = "Wealth (log scale)",
+       color = "Agent Type")
+```
+
+## Time Series Visualizations
+
+### Market Regime Highlighting
+
+```{r}
+# Create time series with regime highlighting
+regime_colors <- c("1" = "lightgreen", "2" = "lightblue", "3" = "lightcoral")
+
+# Plot spillover evolution with regimes
+spillover_ts <- data.frame(
+  time = 1:length(spillover_results$total_spillover),
+  spillover = spillover_results$total_spillover,
+  regime = sim_results$market_regimes[spillover_results$window_size:length(sim_results$market_regimes)]
+)
+
+ggplot(spillover_ts, aes(x = time, y = spillover)) +
+  geom_line(size = 0.8) +
+  geom_point(aes(color = as.factor(regime)), size = 1.5, alpha = 0.7) +
+  scale_color_manual(values = regime_colors,
+                     name = "Market Regime",
+                     labels = c("Low Vol", "Normal", "High Vol")) +
+  theme_minimal() +
+  labs(title = "Total Spillover Evolution by Market Regime",
+       x = "Time Window", y = "Total Spillover (%)")
+```
+
+### Rolling Analysis Plots
+
+```{r}
+# Create rolling correlation plot
+rolling_data <- data.frame(
+  time = 1:length(spillover_results$network_density),
+  density = spillover_results$network_density,
+  clustering = spillover_results$network_clustering
+)
+
+# Network metrics evolution
+ggplot(rolling_data, aes(x = time)) +
+  geom_line(aes(y = density, color = "Network Density"), size = 1) +
+  geom_line(aes(y = clustering, color = "Clustering"), size = 1) +
+  scale_color_manual(values = c("Network Density" = "blue", "Clustering" = "red")) +
+  theme_minimal() +
+  labs(title = "Network Structure Evolution",
+       x = "Time Window", y = "Metric Value",
+       color = "Metric")
+```
+
+## Heatmap Visualizations
+
+### Spillover Heatmaps
+
+```{r}
+# Enhanced spillover heatmap
+spillover_heatmap <- plot_enhanced_spillover_heatmap(
+  spillover_matrix = spillover_results$average_spillover_matrix,
+  color_scheme = "RdYlBu",
+  title = "Average Spillover Matrix"
+)
+
+print(spillover_heatmap)
+```
+
+### Correlation Heatmaps
+
+```{r}
+# Calculate correlation matrix
+correlation_matrix <- cor(data, use = "complete.obs")
+
+# Create correlation heatmap
+library(reshape2)
+correlation_long <- melt(correlation_matrix)
+
+ggplot(correlation_long, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red",
+                       midpoint = 0, limit = c(-1, 1),
+                       name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Asset Correlation Matrix",
+       x = "Asset", y = "Asset")
+```
+
+## Publication Dashboard
+
+### Multi-Panel Layout
+
+```{r}
+# Create comprehensive dashboard
+dashboard <- generate_publication_dashboard(
+  simulation_results = sim_results,
+  spillover_results = spillover_results,
+  layout = "2x2"
+)
+
+print(dashboard)
+```
+
+### Custom Dashboard Layout
+
+```{r}
+# Create custom multi-panel plot
+library(gridExtra)
+
+# Panel 1: Network plot
+p1 <- plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  layout = "stress",
+  title = "A) Network Structure"
+)
+
+# Panel 2: Spillover evolution
+p2 <- ggplot(spillover_ts, aes(x = time, y = spillover)) +
+  geom_line() +
+  theme_minimal() +
+  labs(title = "B) Spillover Evolution", x = "Time", y = "Spillover (%)")
+
+# Panel 3: Wealth inequality
+wealth_gini <- data.frame(
+  time = 1:length(sim_results$wealth_evolution_gini),
+  gini = sim_results$wealth_evolution_gini
+)
+
+p3 <- ggplot(wealth_gini, aes(x = time, y = gini)) +
+  geom_line() +
+  theme_minimal() +
+  labs(title = "C) Wealth Inequality", x = "Time", y = "Gini Coefficient")
+
+# Panel 4: Agent performance
+agent_performance <- sim_results$agent_performance_summary
+
+p4 <- ggplot(agent_performance, aes(x = agent_type, y = mean_return, fill = agent_type)) +
+  geom_col() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "D) Agent Performance", x = "Agent Type", y = "Mean Return")
+
+# Combine panels
+grid.arrange(p1, p2, p3, p4, ncol = 2)
+```
+
+## Interactive Visualizations
+
+### Plotly Integration
+
+```{r}
+library(plotly)
+
+# Convert ggplot to interactive plot
+interactive_spillover <- ggplotly(
+  ggplot(spillover_ts, aes(x = time, y = spillover, color = as.factor(regime))) +
+    geom_line() +
+    theme_minimal() +
+    labs(title = "Interactive Spillover Evolution")
+)
+
+interactive_spillover
+```
+
+### Dynamic Network Animation
+
+```{r}
+# Create animated network (conceptual - requires additional packages)
+# This would show network evolution over time
+# animate_network_evolution(spillover_results, n_frames = 50)
+```
+
+## Customization Options
+
+### Theme Customization
+
+```{r}
+# Custom ggplot theme for publications
+publication_theme <- theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10),
+    legend.title = element_text(size = 11),
+    legend.text = element_text(size = 10),
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+
+# Apply to plots
+plot_enhanced_network(
+  spillover_results$average_spillover_matrix,
+  layout = "stress"
+) + publication_theme
+```
+
+### Color Palette Customization
+
+```{r}
+# Custom color palettes
+custom_colors <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b")
+
+# Apply to agent network
+plot_agent_type_network(
+  agents = agents,
+  network_obj = network$networks$trading$graph,
+  color_palette = custom_colors
+)
+```
+
+## Export and Saving
+
+### High-Quality Image Export
+
+```{r}
+# Save high-resolution plots
+ggsave(
+  filename = "network_analysis.png",
+  plot = network_plot,
+  width = 10, height = 8,
+  dpi = 300, bg = "white"
+)
+
+# Save PDF for publications
+ggsave(
+  filename = "network_analysis.pdf",
+  plot = network_plot,
+  width = 10, height = 8,
+  device = "pdf"
+)
+```
+
+### Batch Export
+
+```{r}
+# Export multiple visualizations
+plots_list <- list(
+  network = network_plot,
+  spillover_evolution = ggplot(spillover_ts, aes(x = time, y = spillover)) + geom_line(),
+  wealth_inequality = ggplot(wealth_gini, aes(x = time, y = gini)) + geom_line()
+)
+
+# Save all plots
+for(name in names(plots_list)) {
+  ggsave(
+    filename = paste0(name, ".png"),
+    plot = plots_list[[name]],
+    width = 10, height = 6, dpi = 300
+  )
+}
+```
+
+## Performance Tips
+
+### Large Network Visualization
+
+```{r}
+# For large networks (>50 nodes):
+# - Use simpler layouts (e.g., "circle")
+# - Reduce edge transparency
+# - Filter weak connections
+# - Use node aggregation
+
+# Filter weak spillovers
+filtered_matrix <- spillover_results$average_spillover_matrix
+filtered_matrix[filtered_matrix < quantile(filtered_matrix, 0.75)] <- 0
+
+plot_enhanced_network(
+  filtered_matrix,
+  layout = "circle",
+  edge_alpha = 0.6
+)
+```
+
+### Memory Optimization
+
+```{r}
+# For large datasets:
+# - Sample data points for time series
+# - Use binning for scatter plots
+# - Create plots in chunks
+# - Clear plot objects after saving
+
+# Sample for visualization
+sample_indices <- seq(1, nrow(spillover_ts), by = 5)
+spillover_sample <- spillover_ts[sample_indices, ]
+
+# Create plot with sampled data
+ggplot(spillover_sample, aes(x = time, y = spillover)) +
+  geom_line()
+```
+
+## Next Steps
+
+- Explore **Network Analysis** for spillover calculation details
+- Read **Agent-Based Modeling** for simulation components  
+- Try **Advanced Analysis** for complex multi-asset workflows
+- Check **Getting Started** for basic usage examples
+
+## References
+
+1. Wickham, H. (2016). ggplot2: Elegant Graphics for Data Analysis.
+2. Pedersen, T. L. (2021). ggraph: An Implementation of Grammar of Graphics for Graphs and Networks.
+3. Garnier, S., et al. (2021). viridis: Colorblind-Friendly Color Maps for R.

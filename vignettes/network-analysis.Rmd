@@ -1,0 +1,579 @@
+---
+title: "Network Analysis and Spillover Detection"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Network Analysis and Spillover Detection}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Network Analysis and Spillover Detection
+
+AgenticWaves provides advanced network analysis capabilities for detecting spillover effects, contagion episodes, and systemic risk in financial markets. This guide covers the comprehensive network analysis framework.
+
+## Overview
+
+The network analysis framework includes:
+
+- **Dynamic spillover networks** with time-varying connectivity
+- **Multi-methodology contagion detection** using consensus algorithms
+- **Regime-switching network dynamics** with structural break detection
+- **Comprehensive network metrics** and centrality measures
+- **Real-time spillover monitoring** with significance testing
+- **Publication-quality network visualizations**
+
+## Core Concepts
+
+### Spillover Effects
+Spillover effects represent the transmission of shocks between financial assets or markets:
+
+- **Return spillovers**: Price movement transmission
+- **Volatility spillovers**: Risk transmission  
+- **Correlation spillovers**: Co-movement changes
+- **Liquidity spillovers**: Funding constraint transmission
+
+### Network Construction
+Networks are built from statistical relationships:
+
+```{r}
+# Common network construction methods:
+# 1. Correlation networks (linear relationships)
+# 2. Partial correlation networks (direct relationships)
+# 3. Transfer entropy networks (information flow)
+# 4. Granger causality networks (predictive relationships)
+```
+
+## Dynamic Spillover Analysis
+
+### Basic Spillover Calculation
+
+```{r}
+library(AgenticWaves)
+
+# Load data and run simulation
+data <- get_sample_data("global_markets", n_assets = 10, n_periods = 500)
+agents <- create_enhanced_agent_population(n_agents = 300)
+
+sim_results <- simulate_enhanced_market_dynamics(
+  agents = agents,
+  asset_data = data,
+  n_periods = 1000
+)
+
+# Calculate dynamic spillovers
+spillover_results <- calculate_dynamic_spillover_networks(
+  simulation_results = sim_results,
+  window_size = 100,
+  significance_level = 0.05
+)
+```
+
+### Spillover Components
+
+The spillover analysis provides:
+
+```{r}
+# Main spillover measures
+total_spillover <- spillover_results$total_spillover          # Overall connectivity
+directional_spillovers <- spillover_results$directional_spillovers  # Asset-specific spillovers
+network_density <- spillover_results$network_density         # Network density evolution
+network_clustering <- spillover_results$network_clustering   # Clustering evolution
+
+# Summary statistics
+cat("Average total spillover:", round(mean(total_spillover), 2), "%\n")
+cat("Peak spillover:", round(max(total_spillover), 2), "%\n")
+cat("Spillover volatility:", round(sd(total_spillover), 2), "%\n")
+```
+
+### Rolling Window Analysis
+
+The rolling window approach captures dynamic relationships:
+
+```{r}
+# Window size considerations:
+# - Larger windows: More stable estimates, less responsive
+# - Smaller windows: More responsive, noisier estimates
+# - Typical range: 50-200 observations
+
+# Test different window sizes
+window_sizes <- c(50, 100, 150, 200)
+spillover_by_window <- list()
+
+for(ws in window_sizes) {
+  spillover_temp <- calculate_dynamic_spillover_networks(
+    sim_results, 
+    window_size = ws
+  )
+  spillover_by_window[[paste0("window_", ws)]] <- spillover_temp$total_spillover
+}
+
+# Compare spillover evolution
+par(mfrow = c(2, 2))
+for(i in 1:length(window_sizes)) {
+  plot(spillover_by_window[[i]], 
+       type = "l", 
+       main = paste("Window Size:", window_sizes[i]),
+       ylab = "Total Spillover (%)")
+}
+```
+
+## Advanced Contagion Detection
+
+### Multi-Methodology Detection
+
+```{r}
+# Use multiple detection methods for robust results
+contagion_results <- detect_contagion_episodes(
+  spillover_results = spillover_results,
+  detection_methods = c("threshold", "regime", "correlation", "volatility")
+)
+
+# View consensus episodes
+consensus_episodes <- contagion_results$consensus_episodes
+episode_characteristics <- contagion_results$episode_characteristics
+
+print(episode_characteristics)
+```
+
+### Detection Methods
+
+#### 1. Threshold-Based Detection
+Identifies periods with unusually high spillovers:
+
+```{r}
+# Multiple threshold levels
+thresholds <- c(0.75, 0.85, 0.90, 0.95)  # Quantile thresholds
+
+# Episodes at different threshold levels
+threshold_episodes <- contagion_results$individual_indicators$threshold
+```
+
+#### 2. Regime-Switching Detection
+Uses changepoint analysis to identify regime shifts:
+
+```{r}
+# Structural breaks in spillover evolution
+regime_episodes <- contagion_results$individual_indicators$regime
+
+# Regime characteristics:
+# - High spillover regimes vs. low spillover regimes
+# - Regime duration and intensity
+# - Transition probabilities
+```
+
+#### 3. Correlation-Based Detection
+Identifies periods of unusually high cross-asset correlations:
+
+```{r}
+# High correlation episodes
+correlation_episodes <- contagion_results$individual_indicators$correlation
+
+# Features:
+# - Average correlation evolution
+# - Correlation spikes and clusters
+# - Flight-to-quality episodes
+```
+
+#### 4. Volatility-Based Detection
+Detects volatility spikes that often accompany contagion:
+
+```{r}
+# Volatility spike detection
+volatility_episodes <- contagion_results$individual_indicators$volatility
+
+# Characteristics:
+# - Synchronized volatility increases
+# - Volatility clustering
+# - Risk-off periods
+```
+
+## Network Metrics and Analysis
+
+### Comprehensive Network Metrics
+
+```{r}
+# Calculate detailed network metrics
+network_metrics <- calculate_network_metrics(
+  spillover_results$network_results$graph
+)
+
+# Basic properties
+print(paste("Number of nodes:", network_metrics$n_nodes))
+print(paste("Number of edges:", network_metrics$n_edges))
+print(paste("Network density:", round(network_metrics$density, 3)))
+print(paste("Average clustering:", round(network_metrics$transitivity, 3)))
+```
+
+### Centrality Measures
+
+Different centrality measures reveal different aspects of network importance:
+
+```{r}
+# Degree centrality (number of connections)
+degree_centrality <- network_metrics$degree_centrality
+
+# Betweenness centrality (bridge nodes)
+betweenness_centrality <- network_metrics$betweenness_centrality
+
+# Closeness centrality (information spread)
+closeness_centrality <- network_metrics$closeness_centrality
+
+# Eigenvector centrality (influence)
+eigenvector_centrality <- network_metrics$eigenvector_centrality
+
+# Identify most central nodes
+most_central_degree <- which.max(degree_centrality$values)
+most_central_betweenness <- which.max(betweenness_centrality$values)
+
+cat("Most connected asset (degree):", colnames(data)[most_central_degree], "\n")
+cat("Most important bridge (betweenness):", colnames(data)[most_central_betweenness], "\n")
+```
+
+### Community Detection
+
+Identify clusters of highly connected assets:
+
+```{r}
+# Community structure
+community_info <- network_metrics$community_membership
+n_communities <- network_metrics$n_communities
+modularity_score <- network_metrics$modularity
+
+cat("Number of communities:", n_communities, "\n")
+cat("Modularity score:", round(modularity_score, 3), "\n")
+
+# Assets by community
+for(i in 1:n_communities) {
+  community_assets <- which(community_info == i)
+  cat("Community", i, ":", colnames(data)[community_assets], "\n")
+}
+```
+
+### Small-World Properties
+
+Test for small-world network characteristics:
+
+```{r}
+# Small-world properties
+small_world_sigma <- network_metrics$small_world_sigma
+
+if(!is.na(small_world_sigma)) {
+  cat("Small-world sigma:", round(small_world_sigma, 3), "\n")
+  
+  if(small_world_sigma > 1) {
+    cat("Network exhibits small-world properties\n")
+  } else {
+    cat("Network does not exhibit small-world properties\n")
+  }
+}
+```
+
+## Time-Varying Network Analysis
+
+### Network Evolution
+
+Track how network structure changes over time:
+
+```{r}
+# Network metrics evolution
+plot(spillover_results$network_density, 
+     type = "l", 
+     main = "Network Density Evolution",
+     xlab = "Time Window", 
+     ylab = "Density")
+
+plot(spillover_results$network_clustering, 
+     type = "l", 
+     main = "Network Clustering Evolution",
+     xlab = "Time Window", 
+     ylab = "Clustering Coefficient")
+```
+
+### Structural Break Detection
+
+Identify periods of significant network structure changes:
+
+```{r}
+# Structural breaks in network properties
+structural_breaks <- spillover_results$structural_breaks
+
+if(length(structural_breaks$density) > 0) {
+  cat("Density breaks at windows:", structural_breaks$density, "\n")
+}
+
+if(length(structural_breaks$clustering) > 0) {
+  cat("Clustering breaks at windows:", structural_breaks$clustering, "\n")
+}
+```
+
+## Asset-Level Spillover Analysis
+
+### Directional Spillovers
+
+Analyze which assets are spillover transmitters vs. receivers:
+
+```{r}
+# Asset spillover statistics
+asset_stats <- spillover_results$asset_spillover_stats
+
+# Net spillover contributors (positive = transmitter, negative = receiver)
+net_spillovers <- asset_stats$net_spillover
+names(net_spillovers) <- colnames(data)
+
+# Top spillover transmitters
+transmitters <- sort(net_spillovers, decreasing = TRUE)[1:3]
+cat("Top spillover transmitters:\n")
+print(transmitters)
+
+# Top spillover receivers  
+receivers <- sort(net_spillovers, decreasing = FALSE)[1:3]
+cat("Top spillover receivers:\n")
+print(receivers)
+```
+
+### Spillover Volatility
+
+Identify assets with variable spillover roles:
+
+```{r}
+# Assets with high spillover volatility
+spillover_volatility <- asset_stats$spillover_volatility
+names(spillover_volatility) <- colnames(data)
+
+variable_spillovers <- sort(spillover_volatility, decreasing = TRUE)[1:3]
+cat("Most variable spillover roles:\n")
+print(variable_spillovers)
+```
+
+## Crisis vs. Normal Period Analysis
+
+### Spillover Comparison
+
+Compare spillover patterns during different market conditions:
+
+```{r}
+# Identify crisis periods (high volatility regime)
+crisis_periods <- which(sim_results$market_regimes == 3)
+normal_periods <- which(sim_results$market_regimes == 1)
+
+# Map to spillover windows (accounting for window lag)
+crisis_windows <- pmax(1, crisis_periods - spillover_results$window_size)
+normal_windows <- pmax(1, normal_periods - spillover_results$window_size)
+
+# Crisis vs normal spillovers
+crisis_spillovers <- total_spillover[crisis_windows]
+normal_spillovers <- total_spillover[normal_windows]
+
+cat("Average crisis spillover:", round(mean(crisis_spillovers, na.rm = TRUE), 2), "%\n")
+cat("Average normal spillover:", round(mean(normal_spillovers, na.rm = TRUE), 2), "%\n")
+cat("Crisis spillover increase:", 
+    round(mean(crisis_spillovers, na.rm = TRUE) / mean(normal_spillovers, na.rm = TRUE) - 1, 2) * 100, "%\n")
+```
+
+### Network Structure Changes
+
+Compare network properties across market regimes:
+
+```{r}
+# Network density by regime
+crisis_density <- network_density[crisis_windows]
+normal_density <- network_density[normal_windows]
+
+cat("Crisis network density:", round(mean(crisis_density, na.rm = TRUE), 3), "\n")
+cat("Normal network density:", round(mean(normal_density, na.rm = TRUE), 3), "\n")
+
+# Clustering by regime
+crisis_clustering <- network_clustering[crisis_windows]
+normal_clustering <- network_clustering[normal_windows]
+
+cat("Crisis clustering:", round(mean(crisis_clustering, na.rm = TRUE), 3), "\n")
+cat("Normal clustering:", round(mean(normal_clustering, na.rm = TRUE), 3), "\n")
+```
+
+## Advanced Visualization
+
+### Dynamic Network Plots
+
+Create time-varying network visualizations:
+
+```{r}
+# Network plot for specific time window
+window_index <- 50  # Choose window
+
+# Extract network for this window
+window_spillovers <- matrix(spillover_results$spillover_evolution[window_index, ], 
+                           nrow = sqrt(ncol(spillover_results$spillover_evolution)))
+
+# Create network plot
+network_plot <- plot_enhanced_network(
+  window_spillovers,
+  layout = "stress",
+  node_size_var = "degree",
+  color_scheme = "viridis"
+)
+
+print(network_plot)
+```
+
+### Spillover Heatmaps
+
+Visualize spillover matrices:
+
+```{r}
+# Create spillover heatmap
+library(ggplot2)
+
+# Average spillover matrix
+avg_spillover_matrix <- matrix(
+  colMeans(spillover_results$spillover_evolution),
+  nrow = ncol(data)
+)
+
+# Convert to long format for ggplot
+heatmap_data <- expand.grid(
+  From = colnames(data),
+  To = colnames(data)
+)
+heatmap_data$Spillover <- as.vector(avg_spillover_matrix)
+
+# Create heatmap
+ggplot(heatmap_data, aes(x = From, y = To, fill = Spillover)) +
+  geom_tile() +
+  scale_fill_viridis_c(name = "Spillover\nIntensity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Average Spillover Matrix",
+       x = "Spillover From", y = "Spillover To")
+```
+
+## Statistical Significance Testing
+
+### Spillover Significance
+
+Test statistical significance of spillover measures:
+
+```{r}
+# Significance testing built into calculation
+significant_spillovers <- spillover_results$spillover_evolution
+significant_spillovers[significant_spillovers == 0] <- NA  # Non-significant set to NA
+
+# Proportion of significant spillovers over time
+significance_ratio <- apply(spillover_results$spillover_evolution > 0, 1, mean)
+
+plot(significance_ratio, 
+     type = "l",
+     main = "Proportion of Significant Spillovers",
+     xlab = "Time Window",
+     ylab = "Significance Ratio")
+```
+
+### Bootstrap Confidence Intervals
+
+Generate confidence intervals for spillover estimates:
+
+```{r}
+# Bootstrap procedure (simplified example)
+bootstrap_spillovers <- function(data, n_bootstrap = 100) {
+  bootstrap_results <- matrix(0, n_bootstrap, length(total_spillover))
+  
+  for(b in 1:n_bootstrap) {
+    # Resample data
+    boot_indices <- sample(nrow(data), replace = TRUE)
+    boot_data <- data[boot_indices, ]
+    
+    # Recalculate spillovers (simplified)
+    # In practice, would run full simulation
+    boot_spillovers <- rnorm(length(total_spillover), 
+                           mean = mean(total_spillover), 
+                           sd = sd(total_spillover))
+    bootstrap_results[b, ] <- boot_spillovers
+  }
+  
+  return(bootstrap_results)
+}
+
+# Generate confidence intervals
+# boot_results <- bootstrap_spillovers(data)
+# ci_lower <- apply(boot_results, 2, quantile, 0.025)
+# ci_upper <- apply(boot_results, 2, quantile, 0.975)
+```
+
+## Research Applications
+
+### Systemic Risk Assessment
+- Identify systemically important assets
+- Monitor system-wide connectivity
+- Early warning indicators for financial stress
+
+### Contagion Analysis
+- Crisis transmission mechanisms
+- Speed and magnitude of contagion
+- Policy intervention effectiveness
+
+### Portfolio Management
+- Dynamic correlation structures
+- Regime-dependent diversification benefits
+- Risk management strategies
+
+### Regulatory Analysis
+- Market structure impacts
+- Interconnectedness measures
+- Macroprudential policy design
+
+## Performance Optimization
+
+### Computational Efficiency
+
+For large-scale analysis:
+
+```{r}
+# Optimize spillover calculations
+# - Use appropriate window sizes
+# - Consider parallel processing
+# - Optimize significance testing
+# - Use efficient network algorithms
+
+# Monitor computation time
+system.time({
+  spillover_results <- calculate_dynamic_spillover_networks(
+    sim_results,
+    window_size = 100
+  )
+})
+```
+
+### Memory Management
+
+```{r}
+# For large networks:
+# - Sparse matrix representations
+# - Chunked processing
+# - Efficient data structures
+# - Memory monitoring
+
+# Clear large objects when done
+# rm(large_spillover_object)
+# gc()  # Garbage collection
+```
+
+## Next Steps
+
+- Explore **Visualization Guide** for advanced network plots
+- Read **Advanced Analysis** for complex multi-asset workflows  
+- Try **Custom Data** tutorial with your own financial data
+- Check **Agent-Based Modeling** for simulation details
+
+## References
+
+1. Baruník, J., & Křehlík, T. (2018). Measuring the frequency dynamics of financial connectedness and systemic risk.
+2. Diebold, F. X., & Yılmaz, K. (2012). Better to give than to receive: Predictive directional measurement of volatility spillovers.
+3. Billio, M., et al. (2012). Econometric measures of connectedness and systemic risk in the finance and insurance sectors.
+4. Acemoglu, D., et al. (2012). The network origins of aggregate fluctuations.

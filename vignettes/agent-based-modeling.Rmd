@@ -1,0 +1,484 @@
+---
+title: "Agent-Based Modeling in AgenticWaves"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Agent-Based Modeling in AgenticWaves}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+# Agent-Based Modeling in AgenticWaves
+
+AgenticWaves implements a sophisticated agent-based modeling (ABM) framework for financial market simulation. This guide explores the ABM components, agent types, and advanced simulation capabilities.
+
+## Overview
+
+The ABM framework in AgenticWaves features:
+
+- **6 distinct behavioral agent types** with realistic trading patterns
+- **Heterogeneous agent populations** with customizable diversity
+- **Multi-layer network interactions** (trading, information, social)
+- **Dynamic wealth distribution** with inequality tracking
+- **Crisis-dependent behavior adaptation**
+- **Realistic market microstructure** with price impact and transaction costs
+
+## Agent Types
+
+### 1. Momentum Traders
+Follow price trends and market momentum:
+
+```{r}
+# Momentum traders characteristics
+- High trend sensitivity (0.9)
+- Moderate risk tolerance (0.7)
+- High trading frequency (0.8)
+- Short memory length (20 periods)
+- Strategy: Buy rising assets, sell falling assets
+```
+
+### 2. Contrarian Traders
+Trade against prevailing market trends:
+
+```{r}
+# Contrarian traders characteristics
+- Negative trend sensitivity (-0.7)
+- Moderate risk tolerance (0.6)
+- Moderate trading frequency (0.5)
+- Long memory length (50 periods)
+- Strategy: Buy oversold assets, sell overbought assets
+```
+
+### 3. Fundamentalist Traders
+Base decisions on fundamental analysis:
+
+```{r}
+# Fundamentalist traders characteristics
+- Low trend sensitivity (0.2)
+- Conservative risk tolerance (0.5)
+- Low trading frequency (0.3)
+- Very long memory (100 periods)
+- Strategy: Mean reversion toward fundamental value
+```
+
+### 4. Noise Traders
+Make random or irrational trading decisions:
+
+```{r}
+# Noise traders characteristics
+- Very low trend sensitivity (0.1)
+- High risk tolerance (0.9)
+- Very high trading frequency (0.9)
+- Very short memory (5 periods)
+- Strategy: Random trading decisions
+```
+
+### 5. Herding Traders
+Follow crowd behavior and social signals:
+
+```{r}
+# Herding traders characteristics
+- Moderate trend sensitivity (0.5)
+- Moderate risk tolerance (0.6)
+- Moderate trading frequency (0.6)
+- Short memory length (15 periods)
+- Strategy: Follow dominant market sentiment
+```
+
+### 6. Sophisticated Traders
+Use complex multi-factor strategies:
+
+```{r}
+# Sophisticated traders characteristics
+- High trend sensitivity (0.6)
+- Conservative risk tolerance (0.4)
+- Low trading frequency (0.4)
+- Very long memory (200 periods)
+- Strategy: Multi-factor analysis with risk management
+```
+
+## Creating Agent Populations
+
+### Basic Population Creation
+
+```{r}
+library(AgenticWaves)
+
+# Create a diverse agent population
+agents <- create_enhanced_agent_population(
+  n_agents = 500,
+  behavioral_heterogeneity = 0.7,
+  wealth_distribution = "pareto"
+)
+
+# View population summary
+print(attr(agents, "type_distribution"))
+print(paste("Initial wealth Gini:", round(attr(agents, "wealth_gini"), 3)))
+```
+
+### Wealth Distribution Options
+
+```{r}
+# Equal wealth distribution
+agents_equal <- create_enhanced_agent_population(
+  n_agents = 200,
+  wealth_distribution = "equal"
+)
+
+# Normal wealth distribution
+agents_normal <- create_enhanced_agent_population(
+  n_agents = 200,
+  wealth_distribution = "normal"
+)
+
+# Pareto wealth distribution (realistic inequality)
+agents_pareto <- create_enhanced_agent_population(
+  n_agents = 200,
+  wealth_distribution = "pareto"
+)
+```
+
+### Behavioral Heterogeneity
+
+The `behavioral_heterogeneity` parameter controls diversity within agent types:
+
+```{r}
+# Low heterogeneity (similar agents within types)
+agents_low_het <- create_enhanced_agent_population(
+  n_agents = 300,
+  behavioral_heterogeneity = 0.3
+)
+
+# High heterogeneity (diverse agents within types)
+agents_high_het <- create_enhanced_agent_population(
+  n_agents = 300,
+  behavioral_heterogeneity = 0.9
+)
+```
+
+## Multi-Layer Networks
+
+### Network Types
+
+AgenticWaves creates three types of agent networks:
+
+```{r}
+# Create multi-layer network
+network <- create_dynamic_multilayer_network(
+  agents = agents,
+  network_types = c("trading", "information", "social"),
+  density = 0.1
+)
+
+# Access individual networks
+trading_network <- network$networks$trading
+information_network <- network$networks$information
+social_network <- network$networks$social
+
+# View network properties
+print(trading_network$metrics)
+```
+
+### Trading Network
+Connections based on:
+- Similar agent types
+- Similar wealth levels  
+- Similar risk tolerance
+
+### Information Network
+Connections based on:
+- Agent sophistication
+- Memory length
+- Information processing capabilities
+
+### Social Network
+Small-world network with:
+- Lattice structure with random rewiring
+- Local clustering with long-range connections
+- Realistic social interaction patterns
+
+## Market Simulation
+
+### Basic Simulation
+
+```{r}
+# Load sample data
+data <- get_sample_data("global_markets", n_assets = 10, n_periods = 500)
+
+# Run market simulation
+sim_results <- simulate_enhanced_market_dynamics(
+  agents = agents,
+  asset_data = data,
+  n_periods = 1000,
+  network_effects = TRUE
+)
+```
+
+### Simulation Components
+
+The simulation includes:
+
+1. **Market Regime Dynamics**: Volatility regimes switch based on market conditions
+2. **Agent Decision Making**: Each agent makes trading decisions based on their type
+3. **Network Information Flow**: Information spreads through agent networks
+4. **Price Impact**: Agent trades affect market prices
+5. **Transaction Costs**: Realistic trading costs reduce profits
+6. **Wealth Evolution**: Agent wealth changes based on trading performance
+
+### Market Regimes
+
+```{r}
+# Market regimes in simulation
+# 1 = Low volatility
+# 2 = Normal volatility  
+# 3 = High volatility/crisis
+
+regime_summary <- table(sim_results$market_regimes)
+print(regime_summary)
+
+# Crisis probability and transitions
+crisis_periods <- which(sim_results$market_regimes == 3)
+print(paste("Crisis periods:", length(crisis_periods)))
+```
+
+### Agent Performance Analysis
+
+```{r}
+# Extract agent types
+agent_types <- sapply(agents, function(x) x$type)
+
+# Calculate performance by type
+performance_by_type <- tapply(sim_results$agent_returns, agent_types, function(x) {
+  data.frame(
+    mean_return = mean(x),
+    volatility = sd(x),
+    sharpe_ratio = mean(x) / sd(x),
+    max_return = max(x),
+    min_return = min(x)
+  )
+})
+
+# View performance summary
+print(performance_by_type)
+```
+
+### Wealth Inequality Evolution
+
+```{r}
+# Track wealth inequality over time
+wealth_gini_evolution <- sim_results$wealth_evolution_gini
+
+# Plot wealth inequality
+plot(wealth_gini_evolution, 
+     type = "l", 
+     main = "Wealth Inequality Evolution",
+     xlab = "Time Period", 
+     ylab = "Gini Coefficient")
+
+# Final wealth distribution
+final_wealth <- sim_results$agent_wealth[nrow(sim_results$agent_wealth), ]
+final_gini <- calculate_gini_coefficient(final_wealth)
+
+print(paste("Final wealth Gini:", round(final_gini, 3)))
+```
+
+## Advanced Agent Behaviors
+
+### Crisis Adaptation
+
+Agents adapt their behavior during crisis periods:
+
+```{r}
+# During crisis (regime 3):
+# - Risk tolerance decreases
+# - Trading frequency may increase (flight to quality)
+# - Herding behavior intensifies
+# - Fundamental analysis becomes less reliable
+```
+
+### Social Learning
+
+Agents learn from connected neighbors:
+
+```{r}
+# Information sharing through networks:
+# - Sophisticated agents share more information
+# - Information quality depends on agent type
+# - Social influence affects trading decisions
+# - Network structure impacts information flow
+```
+
+### Memory and Learning
+
+Each agent maintains memory of past market conditions:
+
+```{r}
+# Memory effects:
+# - Recent events weighted more heavily
+# - Memory length varies by agent type
+# - Learning rate affects adaptation speed
+# - Performance feedback influences future decisions
+```
+
+## Customizing Agent Behavior
+
+### Creating Custom Agent Types
+
+While AgenticWaves provides 6 built-in agent types, you can customize behavior:
+
+```{r}
+# Modify agent parameters after creation
+custom_agents <- create_enhanced_agent_population(n_agents = 100)
+
+# Customize specific agents
+for(i in 1:length(custom_agents)) {
+  if(custom_agents[[i]]$type == "momentum") {
+    # Make momentum traders more aggressive
+    custom_agents[[i]]$risk_tolerance <- custom_agents[[i]]$risk_tolerance * 1.2
+    custom_agents[[i]]$trading_frequency <- custom_agents[[i]]$trading_frequency * 1.1
+  }
+}
+```
+
+### Parameter Sensitivity Analysis
+
+Test how different parameters affect outcomes:
+
+```{r}
+# Test different behavioral heterogeneity levels
+heterogeneity_levels <- c(0.3, 0.5, 0.7, 0.9)
+results_by_heterogeneity <- list()
+
+for(het in heterogeneity_levels) {
+  agents_test <- create_enhanced_agent_population(
+    n_agents = 200,
+    behavioral_heterogeneity = het
+  )
+  
+  sim_test <- simulate_enhanced_market_dynamics(
+    agents = agents_test,
+    asset_data = data,
+    n_periods = 500
+  )
+  
+  results_by_heterogeneity[[as.character(het)]] <- sim_test$final_wealth_gini
+}
+
+print(results_by_heterogeneity)
+```
+
+## Visualization of Agent Networks
+
+### Agent Network by Type
+
+```{r}
+# Create agent network visualization
+network_plot <- plot_agent_type_network(
+  agents = agents,
+  network_obj = network$networks$trading$graph,
+  layout = "stress"
+)
+
+print(network_plot)
+```
+
+### Wealth Distribution Plots
+
+```{r}
+# Plot wealth distribution by agent type
+wealth_by_type <- data.frame(
+  agent_type = sapply(agents, function(x) x$type),
+  wealth = sapply(agents, function(x) x$current_wealth)
+)
+
+# Wealth distribution plot
+library(ggplot2)
+ggplot(wealth_by_type, aes(x = agent_type, y = wealth, fill = agent_type)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  theme_minimal() +
+  labs(title = "Wealth Distribution by Agent Type",
+       x = "Agent Type", y = "Wealth (log scale)")
+```
+
+## Performance Optimization
+
+### Simulation Speed
+
+For large simulations, consider:
+
+```{r}
+# Optimize for speed
+# - Reduce number of agents for initial testing
+# - Use shorter simulation periods
+# - Disable network effects for simple simulations
+# - Use parallel processing where available
+
+# Fast simulation for testing
+quick_sim <- simulate_enhanced_market_dynamics(
+  agents = agents[1:100],  # Subset of agents
+  asset_data = data,
+  n_periods = 250,         # Shorter period
+  network_effects = FALSE  # Disable networks
+)
+```
+
+### Memory Management
+
+```{r}
+# For large simulations:
+# - Monitor memory usage
+# - Clear intermediate results
+# - Use appropriate data types
+# - Consider chunked processing for very long simulations
+
+# Monitor memory (if pryr package available)
+if(requireNamespace("pryr", quietly = TRUE)) {
+  print(pryr::mem_used())
+}
+```
+
+## Research Applications
+
+The ABM framework supports various research questions:
+
+### Market Efficiency Studies
+- Impact of different trader types on price discovery
+- Role of information networks in market efficiency
+- Behavioral biases and market anomalies
+
+### Systemic Risk Analysis  
+- Contagion mechanisms through agent networks
+- Impact of wealth inequality on market stability
+- Crisis propagation and amplification
+
+### Policy Analysis
+- Effects of transaction taxes on different agent types
+- Impact of market structure changes
+- Regulatory interventions and market outcomes
+
+### Behavioral Finance
+- Herding behavior and bubble formation
+- Momentum vs. contrarian strategies
+- Learning and adaptation in financial markets
+
+## Next Steps
+
+- Explore **Network Analysis** for spillover detection
+- Read **Visualization Guide** for advanced plotting
+- Try **Advanced Analysis** for complex workflows
+- Check **Custom Data** tutorial for your own datasets
+
+## References
+
+1. Axtell, R. L., & Farmer, J. D. (2025). Agent-based modeling in economics and finance: Past, present, and future.
+2. Hommes, C. (2006). Heterogeneous agent models in economics and finance.
+3. LeBaron, B. (2006). Agent-based computational finance.
+4. Farmer, J. D., & Foley, D. (2009). The economy needs agent-based modelling.
