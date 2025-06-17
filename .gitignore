@@ -1,0 +1,44 @@
+# R package development
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# R build artifacts
+*.tar.gz
+*.Rcheck/
+.Rd2pdf*
+
+# Output directories
+demo_output/
+network_output/
+sample_report/
+visualization_gallery/
+publication_output/
+enhanced_examples_output/
+*_output/
+
+# Temporary files
+*.log
+*.aux
+*.out
+*.toc
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+# System files
+.DS_Store
+Thumbs.db
+*~
+
+# IDE files
+.vscode/
+*.Rproj
+
+# Data files (optional - uncomment if you don't want to commit large data files)
+# *.csv
+# *.xlsx
+# *.rds
+# *.RData
