@@ -67,9 +67,17 @@ plot_enhanced_network <- function(network_obj,
   # Convert to tidygraph
   tg <- tidygraph::as_tbl_graph(g)
   
-  # Create the plot
-  p <- tg %>%
-    ggraph::ggraph(layout = layout) +
+  # Validate layout parameter
+  valid_layouts <- c("stress", "fr", "kk", "circle", "nicely", "randomly", "grid", "star")
+  if (!layout %in% valid_layouts) {
+    layout <- "stress"  # Default fallback
+    warning("Invalid layout specified. Using 'stress' layout.")
+  }
+  
+  # Create the plot with error handling
+  tryCatch({
+    p <- tg %>%
+      ggraph::ggraph(layout = layout) +
     ggraph::geom_edge_link(
       ggplot2::aes(
         width = weight,
@@ -114,26 +122,39 @@ plot_enhanced_network <- function(network_obj,
       subtitle = paste("Scale:", scale, "| Threshold:", tau, "| Layout:", layout),
       caption = paste("Nodes:", igraph::vcount(g), "| Edges:", igraph::ecount(g))
     )
-  
-  # Apply color scheme
-  if(color_scheme == "viridis") {
-    p <- p + ggplot2::scale_color_viridis_c(
-      name = stringr::str_to_title(gsub("_", " ", node_size_var)),
-      option = "plasma"
-    )
-  } else if(color_scheme == "RdBu") {
-    p <- p + ggplot2::scale_color_gradient2(
-      name = stringr::str_to_title(gsub("_", " ", node_size_var)),
-      low = "blue", mid = "white", high = "red",
-      midpoint = median(igraph::V(g)[[node_size_var]], na.rm = TRUE)
-    )
-  } else {
-    p <- p + ggplot2::scale_color_viridis_c(
-      name = stringr::str_to_title(gsub("_", " ", node_size_var))
-    )
-  }
-  
-  return(p)
+    
+    # Apply color scheme
+    if(color_scheme == "viridis") {
+      p <- p + ggplot2::scale_color_viridis_c(
+        name = stringr::str_to_title(gsub("_", " ", node_size_var)),
+        option = "plasma"
+      )
+    } else if(color_scheme == "RdBu") {
+      p <- p + ggplot2::scale_color_gradient2(
+        name = stringr::str_to_title(gsub("_", " ", node_size_var)),
+        low = "blue", mid = "white", high = "red",
+        midpoint = median(igraph::V(g)[[node_size_var]], na.rm = TRUE)
+      )
+    } else {
+      p <- p + ggplot2::scale_color_viridis_c(
+        name = stringr::str_to_title(gsub("_", " ", node_size_var))
+      )
+    }
+    
+    # Return the plot
+    p
+    
+  }, error = function(e) {
+    # Create a simple fallback ggplot if ggraph fails
+    warning("ggraph plotting failed, creating fallback plot: ", e$message)
+    
+    ggplot2::ggplot() + 
+      ggplot2::annotate("text", x = 0.5, y = 0.5, 
+                       label = paste("Network plot error:", e$message), 
+                       size = 5, color = "red") +
+      ggplot2::theme_void() +
+      ggplot2::labs(title = "Network Visualization Error")
+  })
 }
 
 #' Plot Agent Type Network
