@@ -85,6 +85,12 @@
 #' Axtell, R. L., & Farmer, J. D. (2025). Agent-based modeling in economics and finance: Past, present, and future. Journal of Economic Literature.
 #' 
 #' @keywords package financial-analysis agent-based-modeling network-analysis spillover-effects
+#' @import stats utils
+#' @importFrom grDevices dev.off png
+#' @importFrom graphics lines par plot
+#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
+#' @export %>%
 #' 
 #' @name AgenticWaves-package
 "_PACKAGE"
