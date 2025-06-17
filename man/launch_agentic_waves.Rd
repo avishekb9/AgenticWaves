@@ -32,13 +32,19 @@ of available functions and smooth application startup.
 }
 \examples{
 \dontrun{
-# Launch interactive menu
+# Launch interactive menu (default)
 launch_agentic_waves()
 
 # Launch Shiny app directly
 launch_agentic_waves(mode = "shiny")
 
-# Run quick demo
+# Run complete demonstration
 launch_agentic_waves(mode = "demo")
+
+# Quick autonomous analysis
+launch_agentic_waves(mode = "quick")
+
+# Launch without system checks (faster)
+launch_agentic_waves(mode = "interactive", check_system = FALSE)
 }
 }

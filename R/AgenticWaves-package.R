@@ -86,9 +86,8 @@
 #' 
 #' @keywords package financial-analysis agent-based-modeling network-analysis spillover-effects
 #' 
-#' @docType package
 #' @name AgenticWaves-package
-NULL
+"_PACKAGE"
 
 # Package startup message
 .onAttach <- function(libname, pkgname) {

@@ -19,3 +19,18 @@ Processed data matrix
 \description{
 Clean and preprocess financial data for analysis
 }
+\examples{
+# Generate sample data and process it
+raw_data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+
+# Process with outlier removal
+clean_data <- process_financial_data(raw_data, remove_outliers = TRUE)
+
+# Process with standardization
+std_data <- process_financial_data(raw_data, standardize = TRUE)
+
+# Compare dimensions
+cat("Original:", dim(raw_data), "\n")
+cat("Cleaned:", dim(clean_data), "\n")
+
+}

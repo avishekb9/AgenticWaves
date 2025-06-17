@@ -26,3 +26,37 @@ List of ggplot2 objects
 \description{
 Create comprehensive publication-quality dashboard
 }
+\examples{
+\donttest{
+# Create simulation and spillover results for dashboard
+agents <- create_enhanced_agent_population(n_agents = 20)
+asset_data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+
+# Run simulation
+sim_results <- simulate_enhanced_market_dynamics(
+  agents = agents,
+  asset_data = asset_data,
+  n_periods = 80,
+  network_effects = FALSE  # Faster for example
+)
+
+# Calculate spillovers
+spillover_results <- calculate_dynamic_spillover_networks(
+  sim_results, window_size = 30
+)
+
+# Generate dashboard
+dashboard <- generate_publication_dashboard(
+  simulation_results = sim_results,
+  spillover_results = spillover_results,
+  output_dir = tempdir(),
+  save_plots = FALSE  # Don't save for example
+)
+
+# View dashboard components
+cat("Dashboard plots:", names(dashboard), "\n")
+if ("network_plot" \%in\% names(dashboard)) {
+  print(dashboard$network_plot)
+}
+}
+}

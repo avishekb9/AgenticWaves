@@ -15,3 +15,16 @@ List with data quality metrics and recommendations
 \description{
 Check data quality and provide diagnostic information
 }
+\examples{
+# Generate sample data for quality validation
+data <- get_sample_data("global_markets", n_assets = 5, n_periods = 200)
+
+# Validate data quality
+quality_report <- validate_data_quality(data)
+
+# View quality summary
+cat("Quality Score:", quality_report$quality_score, "\n")
+cat("Quality Level:", quality_report$quality_level, "\n")
+cat("Issues:", paste(quality_report$issues, collapse = ", "), "\n")
+
+}

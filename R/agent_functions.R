@@ -494,6 +494,32 @@ create_enhanced_agent_population <- function(n_agents = 500, behavioral_heteroge
 #'
 #' @return List containing multilayer network structure
 #' @export
+#' 
+#' @examples
+#' # Create agents and multilayer network
+#' agents <- create_enhanced_agent_population(n_agents = 15)
+#' 
+#' # Create network with default settings
+#' network <- create_dynamic_multilayer_network(agents, density = 0.1)
+#' 
+#' # Examine network structure
+#' cat("Network layers:", names(network$networks), "\n")
+#' 
+#' # Create custom network with specific types
+#' custom_network <- create_dynamic_multilayer_network(
+#'   agents, 
+#'   network_types = c("information", "trading"),
+#'   density = 0.15
+#' )
+#' 
+#' # Check network properties
+#' for (layer_name in names(custom_network$networks)) {
+#'   layer <- custom_network$networks[[layer_name]]
+#'   if (!is.null(layer$adjacency_matrix)) {
+#'     layer_density <- sum(layer$adjacency_matrix) / length(layer$adjacency_matrix)
+#'     cat(layer_name, "layer density:", round(layer_density, 3), "\n")
+#'   }
+#' }
 create_dynamic_multilayer_network <- function(agents, 
                                              network_types = c("trading", "information", "social"),
                                              density = 0.1) {

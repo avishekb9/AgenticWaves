@@ -15,3 +15,15 @@ Numeric Gini coefficient (0 = perfect equality, 1 = perfect inequality)
 \description{
 Calculate Gini coefficient for wealth inequality measurement
 }
+\examples{
+# Example with equal wealth distribution
+equal_wealth <- rep(100, 10)
+gini_equal <- calculate_gini_coefficient(equal_wealth)
+cat("Equal distribution Gini:", gini_equal, "\n")
+
+# Example with unequal wealth distribution
+unequal_wealth <- c(10, 20, 30, 40, 100, 200, 300, 400, 500, 1000)
+gini_unequal <- calculate_gini_coefficient(unequal_wealth)
+cat("Unequal distribution Gini:", gini_unequal, "\n")
+
+}

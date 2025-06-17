@@ -17,3 +17,17 @@ Character vector of detected asset classes
 \description{
 Automatically detect asset classes from data characteristics
 }
+\examples{
+# Generate sample data with different characteristics
+market_data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+crypto_data <- get_sample_data("crypto", n_assets = 2, n_periods = 100)
+
+# Combine datasets
+combined_data <- cbind(market_data, crypto_data)
+colnames(combined_data) <- c("SPX", "FTSE", "DAX", "BTC", "ETH")
+
+# Detect asset classes
+classes <- detect_asset_classes(combined_data)
+print(classes)
+
+}

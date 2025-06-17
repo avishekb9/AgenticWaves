@@ -36,5 +36,11 @@ run_agentic_waves_app(port = 8080)
 
 # Launch without auto-opening browser
 run_agentic_waves_app(launch.browser = FALSE)
+
+# Launch on specific host and port
+run_agentic_waves_app(host = "0.0.0.0", port = 3838)
+
+# Launch in showcase mode
+run_agentic_waves_app(display.mode = "showcase")
 }
 }

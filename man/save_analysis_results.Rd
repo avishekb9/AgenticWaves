@@ -19,3 +19,22 @@ Logical indicating success
 \description{
 Save analysis results to file
 }
+\examples{
+\dontrun{
+# Generate sample results
+data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+quality_results <- validate_data_quality(data)
+
+# Save as RDS (default)
+save_analysis_results(quality_results, "quality_report", "rds")
+
+# Save as CSV (for data frames/matrices only)
+summary_stats <- data.frame(
+  Asset = colnames(data),
+  Mean = apply(data, 2, mean),
+  SD = apply(data, 2, sd)
+)
+save_analysis_results(summary_stats, "summary_stats", "csv")
+}
+
+}

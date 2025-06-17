@@ -20,8 +20,13 @@ Matrix of financial returns data
 Retrieve sample financial data for analysis
 }
 \examples{
-\dontrun{
-data <- get_sample_data("global_markets")
-crypto_data <- get_sample_data("crypto", n_assets = 5)
-}
+# Generate sample global markets data
+data <- get_sample_data("global_markets", n_assets = 5, n_periods = 100)
+head(data)
+
+# Generate crypto data
+crypto_data <- get_sample_data("crypto", n_assets = 3, n_periods = 50)
+
+# Generate commodities data
+commodity_data <- get_sample_data("commodities", n_assets = 4)
 }

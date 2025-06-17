@@ -51,7 +51,7 @@ test_that("detect_asset_classes works", {
   expect_true(all(classes %in% c("equity", "crypto", "commodity", "bond")))
   
   # BTC should be detected as crypto
-  expect_equal(classes["BTC"], "crypto")
+  expect_equal(as.character(classes["BTC"]), "crypto")
 })
 
 test_that("validate_data_quality provides comprehensive assessment", {

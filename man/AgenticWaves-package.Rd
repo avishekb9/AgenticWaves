@@ -95,6 +95,7 @@ Axtell, R. L., & Farmer, J. D. (2025). Agent-based modeling in economics and fin
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://avishekb9.github.io/AgenticWaves/}
   \item \url{https://github.com/avishekb9/AgenticWaves}
   \item Report bugs at \url{https://github.com/avishekb9/AgenticWaves/issues}
 }

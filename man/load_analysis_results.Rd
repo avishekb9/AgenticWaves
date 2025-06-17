@@ -15,3 +15,18 @@ Loaded analysis results
 \description{
 Load previously saved analysis results
 }
+\examples{
+\dontrun{
+# Save sample results first
+data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+quality_results <- validate_data_quality(data)
+save_analysis_results(quality_results, "test_results.rds")
+
+# Load the results back
+loaded_results <- load_analysis_results("test_results.rds")
+
+# Clean up
+file.remove("test_results.rds")
+}
+
+}

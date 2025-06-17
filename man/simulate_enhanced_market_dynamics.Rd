@@ -26,3 +26,23 @@ List containing simulation results
 \description{
 Run comprehensive market simulation with agent interactions
 }
+\examples{
+\donttest{
+# Create sample agents and data
+agents <- create_enhanced_agent_population(n_agents = 50)
+asset_data <- get_sample_data("global_markets", n_assets = 5, n_periods = 100)
+
+# Run short simulation
+sim_results <- simulate_enhanced_market_dynamics(
+  agents = agents,
+  asset_data = asset_data,
+  n_periods = 50,
+  network_effects = TRUE
+)
+
+# Examine results
+cat("Simulation completed with", sim_results$n_agents, "agents\n")
+cat("Final wealth Gini:", round(sim_results$final_wealth_gini, 3), "\n")
+cat("Average agent return:", round(mean(sim_results$agent_returns) * 100, 2), "\%\n")
+}
+}

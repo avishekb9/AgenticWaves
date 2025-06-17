@@ -23,3 +23,29 @@ List containing spillover analysis results
 \description{
 Calculate time-varying spillover networks and detect contagion episodes
 }
+\examples{
+\donttest{
+# Create simulation first
+agents <- create_enhanced_agent_population(n_agents = 30)
+asset_data <- get_sample_data("global_markets", n_assets = 4, n_periods = 200)
+
+sim_results <- simulate_enhanced_market_dynamics(
+  agents = agents,
+  asset_data = asset_data,
+  n_periods = 150,
+  network_effects = FALSE  # Faster for example
+)
+
+# Calculate spillover networks
+spillover_results <- calculate_dynamic_spillover_networks(
+  simulation_results = sim_results,
+  window_size = 50,
+  significance_level = 0.05
+)
+
+# Examine spillover results
+cat("Average spillover:", round(mean(spillover_results$total_spillover), 2), "\%\n")
+cat("Contagion episodes:", nrow(spillover_results$contagion_episodes), "\n")
+cat("Peak spillover:", round(max(spillover_results$total_spillover), 2), "\%\n")
+}
+}

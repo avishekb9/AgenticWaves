@@ -23,3 +23,34 @@ List containing detailed contagion analysis
 \description{
 Advanced contagion detection using multiple methodologies
 }
+\examples{
+\donttest{
+# Build up from previous examples
+agents <- create_enhanced_agent_population(n_agents = 25)
+asset_data <- get_sample_data("global_markets", n_assets = 3, n_periods = 150)
+
+# Run simulation
+sim_results <- simulate_enhanced_market_dynamics(
+  agents = agents,
+  asset_data = asset_data,
+  n_periods = 100,
+  network_effects = FALSE
+)
+
+# Calculate spillovers
+spillover_results <- calculate_dynamic_spillover_networks(
+  sim_results, window_size = 40, significance_level = 0.1
+)
+
+# Detect contagion episodes
+contagion_analysis <- detect_contagion_episodes(
+  spillover_results = spillover_results,
+  market_data = sim_results$market_prices,
+  detection_methods = c("threshold", "correlation")
+)
+
+# View results
+cat("Consensus episodes:", length(contagion_analysis$consensus_episodes), "\n")
+cat("Detection methods:", paste(contagion_analysis$detection_methods, collapse = ", "), "\n")
+}
+}

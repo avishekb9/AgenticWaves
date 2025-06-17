@@ -10,10 +10,15 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' data <- get_sample_data("global_markets")
-#' crypto_data <- get_sample_data("crypto", n_assets = 5)
-#' }
+#' # Generate sample global markets data
+#' data <- get_sample_data("global_markets", n_assets = 5, n_periods = 100)
+#' head(data)
+#' 
+#' # Generate crypto data
+#' crypto_data <- get_sample_data("crypto", n_assets = 3, n_periods = 50)
+#' 
+#' # Generate commodities data
+#' commodity_data <- get_sample_data("commodities", n_assets = 4)
 get_sample_data <- function(data_type = "global_markets", n_assets = 10, n_periods = 1000) {
   
   # Asset names by type
@@ -105,6 +110,20 @@ get_sample_data <- function(data_type = "global_markets", n_assets = 10, n_perio
 #' @param standardize Logical, whether to standardize returns
 #'
 #' @return Processed data matrix
+#' @examples
+#' # Generate sample data and process it
+#' raw_data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+#' 
+#' # Process with outlier removal
+#' clean_data <- process_financial_data(raw_data, remove_outliers = TRUE)
+#' 
+#' # Process with standardization
+#' std_data <- process_financial_data(raw_data, standardize = TRUE)
+#' 
+#' # Compare dimensions
+#' cat("Original:", dim(raw_data), "\n")
+#' cat("Cleaned:", dim(clean_data), "\n")
+#' 
 #' @export
 process_financial_data <- function(data, remove_outliers = TRUE, standardize = FALSE) {
   
@@ -148,6 +167,19 @@ process_financial_data <- function(data, remove_outliers = TRUE, standardize = F
 #' @param asset_names Character vector of asset names
 #'
 #' @return Character vector of detected asset classes
+#' @examples
+#' # Generate sample data with different characteristics
+#' market_data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+#' crypto_data <- get_sample_data("crypto", n_assets = 2, n_periods = 100)
+#' 
+#' # Combine datasets
+#' combined_data <- cbind(market_data, crypto_data)
+#' colnames(combined_data) <- c("SPX", "FTSE", "DAX", "BTC", "ETH")
+#' 
+#' # Detect asset classes
+#' classes <- detect_asset_classes(combined_data)
+#' print(classes)
+#' 
 #' @export
 detect_asset_classes <- function(data, asset_names = NULL) {
   
@@ -198,6 +230,18 @@ detect_asset_classes <- function(data, asset_names = NULL) {
 #' @param data Numeric matrix of returns data
 #'
 #' @return List with data quality metrics and recommendations
+#' @examples
+#' # Generate sample data for quality validation
+#' data <- get_sample_data("global_markets", n_assets = 5, n_periods = 200)
+#' 
+#' # Validate data quality
+#' quality_report <- validate_data_quality(data)
+#' 
+#' # View quality summary
+#' cat("Quality Score:", quality_report$quality_score, "\n")
+#' cat("Quality Level:", quality_report$quality_level, "\n")
+#' cat("Issues:", paste(quality_report$issues, collapse = ", "), "\n")
+#' 
 #' @export
 validate_data_quality <- function(data) {
   
@@ -288,6 +332,17 @@ validate_data_quality <- function(data) {
 #' @param wealth Numeric vector of wealth values
 #'
 #' @return Numeric Gini coefficient (0 = perfect equality, 1 = perfect inequality)
+#' @examples
+#' # Example with equal wealth distribution
+#' equal_wealth <- rep(100, 10)
+#' gini_equal <- calculate_gini_coefficient(equal_wealth)
+#' cat("Equal distribution Gini:", gini_equal, "\n")
+#' 
+#' # Example with unequal wealth distribution
+#' unequal_wealth <- c(10, 20, 30, 40, 100, 200, 300, 400, 500, 1000)
+#' gini_unequal <- calculate_gini_coefficient(unequal_wealth)
+#' cat("Unequal distribution Gini:", gini_unequal, "\n")
+#' 
 #' @export
 calculate_gini_coefficient <- function(wealth) {
   
@@ -320,6 +375,24 @@ calculate_gini_coefficient <- function(wealth) {
 #' @param format Character string: "rds", "csv", or "excel"
 #'
 #' @return Logical indicating success
+#' @examples
+#' \dontrun{
+#' # Generate sample results
+#' data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+#' quality_results <- validate_data_quality(data)
+#' 
+#' # Save as RDS (default)
+#' save_analysis_results(quality_results, "quality_report", "rds")
+#' 
+#' # Save as CSV (for data frames/matrices only)
+#' summary_stats <- data.frame(
+#'   Asset = colnames(data),
+#'   Mean = apply(data, 2, mean),
+#'   SD = apply(data, 2, sd)
+#' )
+#' save_analysis_results(summary_stats, "summary_stats", "csv")
+#' }
+#' 
 #' @export
 save_analysis_results <- function(results, filename, format = "rds") {
   
@@ -369,6 +442,20 @@ save_analysis_results <- function(results, filename, format = "rds") {
 #' @param filename Character string of file to load
 #'
 #' @return Loaded analysis results
+#' @examples
+#' \dontrun{
+#' # Save sample results first
+#' data <- get_sample_data("global_markets", n_assets = 3, n_periods = 100)
+#' quality_results <- validate_data_quality(data)
+#' save_analysis_results(quality_results, "test_results.rds")
+#' 
+#' # Load the results back
+#' loaded_results <- load_analysis_results("test_results.rds")
+#' 
+#' # Clean up
+#' file.remove("test_results.rds")
+#' }
+#' 
 #' @export
 load_analysis_results <- function(filename) {
   

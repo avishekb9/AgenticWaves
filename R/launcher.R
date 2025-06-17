@@ -20,14 +20,20 @@
 #' 
 #' @examples
 #' \dontrun{
-#' # Launch interactive menu
+#' # Launch interactive menu (default)
 #' launch_agentic_waves()
 #' 
 #' # Launch Shiny app directly
 #' launch_agentic_waves(mode = "shiny")
 #' 
-#' # Run quick demo
+#' # Run complete demonstration
 #' launch_agentic_waves(mode = "demo")
+#' 
+#' # Quick autonomous analysis
+#' launch_agentic_waves(mode = "quick")
+#' 
+#' # Launch without system checks (faster)
+#' launch_agentic_waves(mode = "interactive", check_system = FALSE)
 #' }
 launch_agentic_waves <- function(mode = "interactive", 
                                 auto_install = TRUE, 
@@ -93,6 +99,12 @@ launch_agentic_waves <- function(mode = "interactive",
 #' 
 #' # Launch without auto-opening browser
 #' run_agentic_waves_app(launch.browser = FALSE)
+#' 
+#' # Launch on specific host and port
+#' run_agentic_waves_app(host = "0.0.0.0", port = 3838)
+#' 
+#' # Launch in showcase mode
+#' run_agentic_waves_app(display.mode = "showcase")
 #' }
 run_agentic_waves_app <- function(host = "127.0.0.1", 
                                  port = NULL,
@@ -219,10 +231,10 @@ check_system_requirements <- function() {
   if (r_version < min_r_version) {
     status$ready <- FALSE
     status$issues <- c(status$issues, 
-                      paste("R version", r_version, "< required", min_r_version))
-    cat("❌ R version:", r_version, "(requires >=", min_r_version, ")\n")
+                      paste("R version", as.character(r_version), "< required", min_r_version))
+    cat("❌ R version:", as.character(r_version), "(requires >=", min_r_version, ")\n")
   } else {
-    cat("✅ R version:", r_version, "\n")
+    cat("✅ R version:", as.character(r_version), "\n")
   }
   
   # Check memory
